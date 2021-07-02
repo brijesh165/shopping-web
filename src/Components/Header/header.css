@@ -1,0 +1,9 @@
+.rightMenu {
+    flex-direction: row !important;
+    padding: 10px;
+}
+
+.navitem {
+    margin: auto 10px;
+    cursor: pointer
+}
