@@ -1,18 +1,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Header from './../Header/header';
-import * as actions from './../../store/actions/index';
+import Header from '../Header/header';
+import * as actions from '../../store/actions/index';
 
 import {
     Container, Button, Label, Col,
     CustomInput,
+    Table,
     Modal, ModalHeader, ModalBody
 } from 'reactstrap';
 import { AvForm, AvGroup, AvField } from 'availity-reactstrap-validation';
-import './list_products.css';
+import './admin_Dashboard.css';
 
-class ListProducts extends React.Component {
+const options = {
+    "category": [
+        { value: 'category1', name: 'Category 1' },
+        { value: 'category2', name: 'Category 2' },
+        { value: 'category3', name: 'Category 3' }
+    ],
+    "subcategory": [
+        { value: 'subcategory1', name: 'Subcategory 1' },
+        { value: 'subcategory2', name: 'subcategory 2' },
+        { value: 'subcategory3', name: 'Subcategory 3' }
+    ]
+}
+
+class AdminDashboard extends React.Component {
     constructor(props) {
         super(props);
 
@@ -20,24 +34,33 @@ class ListProducts extends React.Component {
             addModal: false,
             form: {
                 name: "",
-                category: 1,
-                subcategory: 1,
+                category: options.category[0].value,
+                subcategory: options.subcategory[0].value,
                 description: "",
                 price: "",
                 image: null,
                 status: false
-            }
+            },
+            isEdit: false,
+            editProductId: ""
         }
 
         this._handleAddModalToggle = this._handleAddModalToggle.bind(this);
         this._handleChange = this._handleChange.bind(this);
         this._onFormSubmit = this._onFormSubmit.bind(this);
+        this._handleEdit = this._handleEdit.bind(this);
+        this._handleResetForm = this._handleResetForm.bind(this);
+        this._handleCancel = this._handleCancel.bind(this);
+        this._handleDelete = this._handleDelete.bind(this);
     }
 
     _handleAddModalToggle() {
+        console.log("Add Modal: ", !this.state.addModal)
         this.setState({
-            addModal: !this.state.addModal
+            addModal: !this.state.addModal,
+            isEdit: false
         })
+        this._handleResetForm();
     }
 
     _handleChange(e) {
@@ -67,24 +90,96 @@ class ListProducts extends React.Component {
         }
     }
 
-    _onFormSubmit(e) {
-        e.preventDefault();
-        console.log("Form", this.state.form.name)
+    _handleEdit(item) {
+        console.log("Edit Item: ", item)
+        this.setState({
+            addModal: true,
+            isEdit: true,
+            editProductId: item._id,
+            form: {
+                name: item.product_name,
+                category: item.category,
+                subcategory: item.subcategory,
+                description: item.description,
+                price: item.price,
+                image: item.image.split("-")[1],
+                status: item.status === true ? 'on' : 'off'
+            }
+        })
+    }
 
-        // let data = new FormData();
-        // data.set('product_name', this.state.form.name);
-        // data.append('category', this.state.form.category);
-        // data.append('subcategory', this.state.form.subcategory);
-        // data.append('price', this.state.form.price);
-        // data.append('description', this.state.form.description);
-        // data.append('image', this.state.form.image, this.state.form.image.name);
-        // data.append('status', this.state.form.status)
+    _handleDelete(id, imagepath) {
+        const deleteParams = {
+            id: id,
+            imagepath: imagepath
+        }
+        this.props.onDelete(deleteParams);
+    }
 
-        // console.log("Form Data: ", data);
-        this.props.onCreate(this.state.form)
+    _handleResetForm() {
+        this.setState({
+            form: {
+                name: "",
+                category: options.category[0].value,
+                subcategory: options.subcategory[0].value,
+                description: "",
+                price: "",
+                image: null,
+                status: false
+            }
+        })
+    }
+
+    _handleCancel() {
+        this.setState({
+            addModal: false,
+            isEdit: false,
+            editProductId: ""
+        })
+        this._handleResetForm();
+    }
+
+    _onFormSubmit() {
+        if (this.state.isEdit) {
+            const params = {
+                id: this.state.editProductId,
+                form: this.state.form,
+                user_id: this.props._user_id
+            }
+            this.props.onEdit(params)
+        } else {
+            const params = {
+                form: this.state.form,
+                user_id: this.props._user_id
+            }
+            console.log("Create Product Params: ", params)
+            this.props.onCreate(params);
+        }
+
+        console.log("Loading: ", this.props._loading)
+        if (!this.props._loading) {
+            this._handleAddModalToggle();
+            this._handleResetForm();
+        }
+    }
+
+    getAllProducts() {
+        this.props.onFetchProducts({ user_id: this.props._user_id });
+    }
+
+    componentDidMount() {
+        this.getAllProducts();
     }
 
     render() {
+        const { category, subcategory } = options;
+        const categoryOptions = category.map(item => {
+            return <option value={item.value}>{item.name}</option>
+        });
+        const subcategoryOptions = subcategory.map(item => {
+            return <option value={item.value}>{item.name}</option>
+        });
+
         return (
             <React.Fragment>
                 <Header />
@@ -93,9 +188,44 @@ class ListProducts extends React.Component {
                         <Button color="primary" onClick={this._handleAddModalToggle}>Add</Button>
                     </div>
 
+                    {
+                        this.props._productList.length > 0 ?
+                            <Table className="mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>Thumb</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Subcategory</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.props._productList.map((item, index) =>
+                                        <tr key={item._id}>
+                                            <td><img alt={`productimage${index}`} src={`http://localhost:3001/${item.image}`} /></td>
+                                            <td>{item.product_name}</td>
+                                            <td>{item.category}</td>
+                                            <td>{item.subcategory}</td>
+                                            <td>
+                                                <Button color="success" onClick={() => this._handleEdit(item)}>EDIT</Button>
+                                                &nbsp;
+                                                <Button color="danger" onClick={() => this._handleDelete(item._id, item.image)}>DELETE</Button>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </Table> :
+                            <div className="mt-4">
+                                <p>Please add your product</p>
+                            </div>
+                    }
+
+
                     <Modal
                         isOpen={this.state.addModal}
                         size="lg"
+                        toggle={this._handleAddModalToggle}
                         centered>
                         <ModalHeader
                             toggle={this._handleAddModalToggle}>Add</ModalHeader>
@@ -123,11 +253,7 @@ class ListProducts extends React.Component {
                                             name="category"
                                             value={this.state.form.category}
                                             onChange={this._handleChange}>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
+                                            {categoryOptions}
                                         </AvField>
                                     </Col>
                                 </AvGroup>
@@ -136,13 +262,10 @@ class ListProducts extends React.Component {
                                     <Label lg={4}>Subcategory</Label>
                                     <Col lg={8}>
                                         <AvField type="select"
-                                            name="Subcategory"
-                                            value={this.state.form.subcategory}>
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                            <option value="3">3</option>
-                                            <option value="4">4</option>
-                                            <option value="5">5</option>
+                                            name="subcategory"
+                                            value={this.state.form.subcategory}
+                                            onChange={this._handleChange}>
+                                            {subcategoryOptions}
                                         </AvField>
                                     </Col>
                                 </AvGroup>
@@ -197,7 +320,11 @@ class ListProducts extends React.Component {
                                 </AvGroup>
 
                                 <AvGroup row>
-                                    <Button color="success" type="submit">Add</Button>
+                                    <Col lg={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <Button color="success" style={{ marginRight: '10px' }} type="submit">
+                                            {this.state.isEdit ? 'Edit' : 'Add'}</Button>
+                                        <Button color="danger" onClick={this._handleCancel}>Cancel</Button>
+                                    </Col>
                                 </AvGroup>
                             </AvForm>
                         </ModalBody>
@@ -210,7 +337,9 @@ class ListProducts extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+    console.log('State: ', state.products.loading)
     return {
+        _user_id: state.users.user_id,
         _loading: state.products.loading,
         _productList: state.products.products,
     }
@@ -218,8 +347,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onCreate: (params) => dispatch(actions.oncreateproduct(params))
+        onCreate: (params) => dispatch(actions.oncreateproduct(params)),
+        onFetchProducts: (params) => dispatch(actions.onFetchProducts(params)),
+        onEdit: (params) => dispatch(actions.onEditproduct(params)),
+        onDelete: (params) => dispatch(actions.onDeleteproduct(params)),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListProducts);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminDashboard);

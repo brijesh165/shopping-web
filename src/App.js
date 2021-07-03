@@ -2,7 +2,10 @@ import { Switch, Route } from 'react-router-dom';
 import './App.css';
 
 import Login from './Components/Login/login';
-import ListProducts from './Components/List_Products/list_products';
+import AdminDashboard from './Components/Admin_Dashboard/admin_Dashboard';
+import UserDashboard from './Components/User_Dashboard/user_Dashboard'
+import ProductDetails from './Components/Product_Details/product_Details';
+import OrderCart from './Components/Order_Cart/order_Cart';
 
 function App() {
   return (
@@ -12,9 +15,22 @@ function App() {
           <Login />
         )} />
 
-        <Route path="/products" render={() => (
-          <ListProducts />
+        <Route path="/admin-dashboard" render={() => (
+          <AdminDashboard />
         )} />
+
+        <Route path="/user-dashboard" render={() => (
+          <UserDashboard />
+        )} />
+
+        <Route path="/product-details" render={() => (
+          <ProductDetails />
+        )} />
+
+        <Route path="/order-cart" render={() => (
+          <OrderCart />
+        )} />
+
       </Switch>
     </div>
   );

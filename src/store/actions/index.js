@@ -1,7 +1,12 @@
 export {
-    onLogin
+    onLogin,
+    logout
 } from './userActions';
 
 export {
-    oncreateproduct
+    oncreateproduct,
+    onFetchProducts,
+    onFetchProductsForUsers,
+    onEditproduct,
+    onDeleteproduct
 } from './productActions';

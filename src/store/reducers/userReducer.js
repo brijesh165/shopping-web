@@ -2,6 +2,7 @@ import * as actionTypes from './../actions/actionTypes';
 
 const initialState = {
     loading: false,
+    user_id: '',
     token: '',
     role: '',
     username: '',
@@ -20,9 +21,11 @@ const user_reducer = (state = initialState, action) => {
         }
 
         case actionTypes.LOGIN_SUCCESS: {
+            console.log("Reducer: ", action.payload.currentUser._id)
             return {
                 ...state,
                 token: action.payload.token,
+                user_id: action.payload.currentUser._id,
                 role: action.payload.currentUser.role,
                 username: action.payload.currentUser.username,
                 userLoggedIn: true,
@@ -41,6 +44,7 @@ const user_reducer = (state = initialState, action) => {
         case actionTypes.LOGOUT: {
             return {
                 ...state,
+                user_id: '',
                 token: '',
                 role: '',
                 username: '',

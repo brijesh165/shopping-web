@@ -1,0 +1,10 @@
+.addButton {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.formButtons {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+}

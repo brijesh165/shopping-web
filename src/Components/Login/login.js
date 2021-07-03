@@ -9,11 +9,12 @@ import * as actions from './../../store/actions/index';
 
 const mapState = ({ users }) => ({
     _userLoggedIn: users.userLoggedIn,
+    _role: users.role,
     _loginError: users.loginError
 })
 
 const Login = () => {
-    const { _userLoggedIn, _loginError } = useSelector(mapState);
+    const { _userLoggedIn, _role, _loginError } = useSelector(mapState);
     const dispatch = useDispatch();
     const history = useHistory();
     const [username, setUsername] = useState('');
@@ -21,10 +22,15 @@ const Login = () => {
 
     useEffect(() => {
         if (_userLoggedIn) {
-            history.push("/products");
-            _handleFormReset()
+            if (_role === "shop") {
+                history.push("/admin-dashboard");
+                _handleFormReset()
+            } else {
+                history.push("/user-dashboard");
+                _handleFormReset()
+            }
         }
-    }, [_userLoggedIn, history])
+    }, [_userLoggedIn, _role, history])
 
     const _handleFormReset = () => {
         setUsername('');

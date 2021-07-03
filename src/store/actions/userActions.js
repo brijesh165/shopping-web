@@ -6,14 +6,12 @@ export function loginStart() {
         type: actionTypes.LOGIN_START
     }
 }
-
 export function loginSuccess(params) {
     return {
         type: actionTypes.LOGIN_SUCCESS,
         payload: params
     }
 }
-
 export function loginFail(error) {
     return {
         type: actionTypes.LOGIN_FAIL,
@@ -34,6 +32,7 @@ export function onLogin(params) {
         axios.post("http://localhost:3001/login", params)
             .then((data) => {
                 if (data.data.status === 200) {
+                    console.log("Data: ", data.data.user)
                     dispatch(loginSuccess({ token: data.data.token, currentUser: data.data.user }));
                 } else if (data.data.status === 401) {
                     dispatch(loginFail(data.data.error));
@@ -45,3 +44,4 @@ export function onLogin(params) {
             })
     }
 }
+
