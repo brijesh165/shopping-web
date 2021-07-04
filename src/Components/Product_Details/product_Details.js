@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import Header from './../Header/header';
 import { Container, Row, Col, Button } from 'reactstrap';
 
+
+const mapState = ({ users }) => ({
+    _currency: users.currency
+})
+
 const ProductDetails = (props) => {
+    const { _currency } = useSelector(mapState);
     const location = useLocation();
-    const [item, setItem] = useState(location.state);
+    const [item] = useState(location.state);
     const history = useHistory();
 
     const _handleAddToCart = () => {
@@ -16,7 +23,7 @@ const ProductDetails = (props) => {
             if (itemExist) {
                 itemExist.quantity++;
                 localStorage.setItem('cartItems', JSON.stringify(previousCartItems));
-                history.push("/user-dashboard")
+                history.push("/order-cart")
             } else {
                 const newItem = {
                     item: item,
@@ -24,7 +31,7 @@ const ProductDetails = (props) => {
                 }
                 const addNewItemInCard = [...previousCartItems, newItem]
                 localStorage.setItem('cartItems', JSON.stringify(addNewItemInCard));
-                history.push("/user-dashboard")
+                history.push("/order-cart")
             }
         } else {
             const cartItems = [];
@@ -34,7 +41,7 @@ const ProductDetails = (props) => {
             }
             cartItems.push(product);
             localStorage.setItem('cartItems', JSON.stringify(cartItems))
-            history.push("/user-dashboard")
+            history.push("/order-cart")
         }
     }
 
@@ -52,7 +59,7 @@ const ProductDetails = (props) => {
                     </Col>
                     <Col lg={6} style={{ textAlign: 'left' }}>
                         <h3>{item.product_name}</h3>
-                        <p>{item.price}</p>
+                        <p>{_currency === "USD" ? `$${item.price}` : `INR${item.price}`}</p>
                         <p>{item.description}</p>
                         <Button color="success" onClick={_handleAddToCart}>ADD TO CART</Button>
                     </Col>

@@ -64,7 +64,7 @@ class UserDashboard extends React.Component {
 
                 <Container>
                     <Row className="mt-4">
-                        <h3>Welcome username</h3>
+                        <h3>Welcome {this.props._username}</h3>
                     </Row>
 
                     {this.props._productList.length > 0 &&
@@ -80,7 +80,11 @@ class UserDashboard extends React.Component {
                                     <div className="col-md-8 text-left">
                                         <h5>{item.product_name}</h5>
                                         <p>{item.description}</p>
-                                        <h3>${item.price}</h3>
+                                        <h3>
+                                            {
+                                                this.props._currency === "USD" ?
+                                                    `$${item.price}` : `INR${item.price}`
+                                            }</h3>
                                         <Button color="success" onClick={() => this._handleAddCart(item)}>ADD CART</Button>
                                         &nbsp;
                                         <Button>ADD WISHLIST</Button>
@@ -98,6 +102,7 @@ const mapStateToProps = (state) => {
     // console.log("Product List: ", state.products.userproducts)
     return {
         _username: state.users.username,
+        _currency: state.users.currency,
         _loading: state.products.loading,
         _productList: state.products.userproducts
     }

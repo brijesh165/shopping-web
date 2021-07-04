@@ -1,6 +1,10 @@
 import { Switch, Route } from 'react-router-dom';
 import './App.css';
 
+//hoc
+import withAuth from './hoc/withAuth';
+
+// component
 import Login from './Components/Login/login';
 import AdminDashboard from './Components/Admin_Dashboard/admin_Dashboard';
 import UserDashboard from './Components/User_Dashboard/user_Dashboard'
@@ -16,19 +20,27 @@ function App() {
         )} />
 
         <Route path="/admin-dashboard" render={() => (
-          <AdminDashboard />
+          <withAuth>
+            <AdminDashboard />
+          </withAuth>
         )} />
 
         <Route path="/user-dashboard" render={() => (
-          <UserDashboard />
+          <withAuth>
+            <UserDashboard />
+          </withAuth>
         )} />
 
         <Route path="/product-details" render={() => (
-          <ProductDetails />
+          <withAuth>
+            <ProductDetails />
+          </withAuth>
         )} />
 
         <Route path="/order-cart" render={() => (
-          <OrderCart />
+          <withAuth>
+            <OrderCart />
+          </withAuth>
         )} />
 
       </Switch>

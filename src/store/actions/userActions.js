@@ -33,6 +33,8 @@ export function onLogin(params) {
             .then((data) => {
                 if (data.data.status === 200) {
                     console.log("Data: ", data.data.user)
+                    localStorage.setItem("token", data.data.token);
+                    localStorage.setItem("userLoggedIn", true);
                     dispatch(loginSuccess({ token: data.data.token, currentUser: data.data.user }));
                 } else if (data.data.status === 401) {
                     dispatch(loginFail(data.data.error));
@@ -44,4 +46,3 @@ export function onLogin(params) {
             })
     }
 }
-

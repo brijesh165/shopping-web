@@ -24,6 +24,8 @@ const Header = () => {
     }, [userLoggedIn, history])
 
     const _handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userLoggedIn");
         dispatch(actions.logout());
     }
 

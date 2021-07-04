@@ -1,7 +1,13 @@
 import React from 'react';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
 import './order_Cart.css';
-import { Table, Container, Input, Button } from 'reactstrap';
+import {
+    Table, Container, Input, Button, Alert,
+    Modal, ModalHeader, ModalBody
+} from 'reactstrap';
 import Header from '../Header/header';
 
 
@@ -10,11 +16,14 @@ class OrderCart extends React.Component {
         super(props);
 
         this.state = {
-            cartItems: []
+            cartItems: [],
+            checkoutSuccessModal: false
         }
 
         this._handleQuantityChange = this._handleQuantityChange.bind(this);
         this._handleRemoveItemFromCart = this._handleRemoveItemFromCart.bind(this);
+        this._handleContinueShoppingCart = this._handleContinueShoppingCart.bind(this);
+        this._handleCheckout = this._handleCheckout.bind(this);
     }
 
     componentDidMount() {
@@ -62,6 +71,37 @@ class OrderCart extends React.Component {
         })
     }
 
+    _handleContinueShoppingCart() {
+        this.props.history.push({ pathname: "/user-dashboard" })
+    }
+
+    _handleCheckout() {
+        const params = {
+            user_id: this.props._user_id
+        }
+        axios.post("http://localhost:3001/checkout", params)
+            .then((data) => {
+                console.log("Data: ", data.data.status);
+                this.setState({
+                    checkoutSuccessModal: true
+                })
+            })
+            .catch((error) => {
+                console.log("Error: ", error);
+            })
+
+        setTimeout(() => {
+            this.setState({
+                checkoutSuccessModal: false
+            })
+            this.props.history.push({
+                pathname: "/user-dashboard",
+            })
+        }, 2000);
+
+
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -87,9 +127,9 @@ class OrderCart extends React.Component {
                                             <img src={`http://localhost:3001/${item.item.image}`}
                                                 alt={`productImage${item._id}`}
                                                 className="productImage" /></td>
-                                        <td width="40%">
+                                        <td width="30%">
                                             <div>
-                                                <h6>{item.item.product_name}</h6>
+                                                <h4>{item.item.product_name}</h4>
                                                 <p>color: black</p>
                                                 <p>size: small</p>
                                             </div>
@@ -101,22 +141,94 @@ class OrderCart extends React.Component {
                                                 value={item.quantity}
                                                 onChange={(e) => this._handleQuantityChange(e, item.item, item.quantity)} />
                                         </td>
-                                        <td width="10%">{item.item.price}</td>
-                                        <td width="10%">{(item.quantity * item.item.price)}</td>
+                                        <td width="10%">{
+                                            this.props._currency === "USD" ?
+                                                `$${item.item.price}` : `INR${item.item.price}`
+                                        }</td>
+                                        <td width="25%">{
+                                            this.props._currency === "USD" ?
+                                                `$${(item.quantity * item.item.price)}` : `INR${(item.quantity * item.item.price)}`
+                                        }</td>
                                         <td>
                                             <Button color="danger" onClick={() => this._handleRemoveItemFromCart(item.item._id)}>X</Button>
                                         </td>
                                     </tr>
                                 )
                             })}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>SUBTOTAL</b></td>
+                                <td>{
+                                    this.state.cartItems.length > 0 ?
+                                        (this.props._currency === "USD" ?
+                                            `$${(this.state.cartItems.reduce((s, i) => s + (i.item.price * i.quantity), 0))}` : `INR${(this.state.cartItems.reduce((s, i) => s + (i.item.price * i.quantity), 0))}`)
+                                        : 0
+                                }</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>SHOPPING FEE</b></td>
+                                <td>
+                                    {this.props._currency === "USD" ? `$${15}` : `INR${15}`}
+                                    15</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><b>GRANDTOTAL</b></td>
+                                <td>{
+                                    this.state.cartItems.length > 0 ?
+                                        (this.props._currency === "USD" ?
+                                            `$${(this.state.cartItems.reduce((s, i) => s + (i.item.price * i.quantity), 0)) + 15}` : `INR${(this.state.cartItems.reduce((s, i) => s + (i.item.price * i.quantity), 0)) + 15}`)
+                                        : 0
+                                }</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <Button color="danger" onClick={this._handleContinueShoppingCart}>Continue Shopping</Button>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td colspan="2" style={{ textAlign: 'left' }}>
+                                    <Button color="success" onClick={this._handleCheckout}>Checkout</Button>
+                                </td>
+                            </tr>
                         </tbody>
                     </Table>
+
+                    <Modal
+                        isOpen={this.state.checkoutSuccessModal}
+                        size="md"
+                    >
+                        <ModalHeader>Checkout Success</ModalHeader>
+                        <ModalBody>
+                            <Alert color="success">
+                                Your payment done successfully.
+                                Thank you for shopping with us.
+                                Please provide your feedback and continue shoping with us.
+                            </Alert>
+                        </ModalBody>
+                    </Modal>
                 </Container>
             </React.Fragment>
         )
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        _user_id: state.users.user_id,
+        _currency: state.users.currency
+    }
+}
 
-
-export default OrderCart;
+export default withRouter(connect(mapStateToProps)(OrderCart));

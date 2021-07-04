@@ -1,7 +1,7 @@
 .productImage {
-    border: 1px solid #ddd; /* Gray border */
-    border-radius: 4px;  /* Rounded border */
-    padding: 5px; /* Some padding */
+    border: 1px solid #ddd;
+    border-radius: 4px;  
+    padding: 5px; 
     width: 150px;
 }
 

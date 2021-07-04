@@ -5,6 +5,7 @@ const initialState = {
     user_id: '',
     token: '',
     role: '',
+    currency: '',
     username: '',
     loginError: '',
     userLoggedIn: false
@@ -27,6 +28,7 @@ const user_reducer = (state = initialState, action) => {
                 token: action.payload.token,
                 user_id: action.payload.currentUser._id,
                 role: action.payload.currentUser.role,
+                currency: action.payload.currentUser.currency,
                 username: action.payload.currentUser.username,
                 userLoggedIn: true,
                 loading: false

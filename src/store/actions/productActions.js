@@ -2,6 +2,18 @@ import axios from 'axios';
 import FormData from 'form-data';
 import * as actionTypes from './actionTypes';
 
+const api = "http://localhost:3001";
+const token = localStorage.getItem("token");
+
+const config = {
+    headers: {
+        'accept': 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data`,
+        'authorization': `Bearer ${token}`
+    }
+}
+
 export function createProductStart() {
     return {
         type: actionTypes.CREATE_PRODUCT_START
@@ -106,13 +118,7 @@ export function oncreateproduct(params) {
         data.append('status', params.form.status);
         data.append('user_id', params.user_id);
 
-        axios.post("http://localhost:3001/create-product", data, {
-            headers: {
-                'accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'Content-Type': `multipart/form-data`,
-            }
-        })
+        axios.post(`${api}/create-product`, data, config)
             .then((data) => {
                 dispatch(createProductSuccess(data.data.product))
             })
@@ -127,7 +133,7 @@ export function onFetchProducts(params) {
     return dispatch => {
         dispatch(fetchProductStart());
 
-        axios.post("http://localhost:3001/fetch-products", params)
+        axios.post(`${api}//fetch-products`, params, config)
             .then((data) => {
                 // console.log("Fetch Product Success: ", data);
                 dispatch(fetchProductSuccess(data.data.products))
@@ -143,7 +149,7 @@ export function onFetchProductsForUsers() {
     return dispatch => {
         dispatch(fetchUserProductStart());
 
-        axios.post("http://localhost:3001/fetch-user-products")
+        axios.post(`${api}/fetch-user-products`, null, config)
             .then((data) => {
                 // console.log("Data: ", data.data.products)
                 dispatch(fetchUserProductSuccess(data.data.products))
@@ -170,13 +176,7 @@ export function onEditproduct(params) {
         data.append('image', params.form.image, params.form.image.name);
         data.append('status', params.form.status);
         data.append('user_id', params.user_id);
-        axios.post("http://localhost:3001/edit-product", data, {
-            headers: {
-                'accept': 'application/json',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'Content-Type': `multipart/form-data`,
-            }
-        })
+        axios.post(`${api}/edit-product`, data, config)
             .then((data) => {
                 // console.log("Edit Data: ", data.data)
                 dispatch(editProductSuccess(data.data.product))
@@ -191,7 +191,7 @@ export function onEditproduct(params) {
 export function onDeleteproduct(params) {
     return dispatch => {
         dispatch(deleteProductStart());
-        axios.post("http://localhost:3001/delete-product", params)
+        axios.post(`${api}//delete-product`, params, config)
             .then((data) => {
                 dispatch(deleteProductSuccess(data.data.id))
             })
