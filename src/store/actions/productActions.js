@@ -4,8 +4,7 @@ import * as actionTypes from './actionTypes';
 import * as actions from './index';
 
 const api = "http://localhost:3001";
-const token = localStorage.getItem("token");
-console.log("Token: ", token);
+const { token } = JSON.parse(localStorage.getItem("userDetails"));
 const configForForm = {
     headers: {
         'accept': 'application/json',
@@ -140,17 +139,11 @@ export function oncreateproduct(params) {
 export function onFetchProducts(user_id) {
     return dispatch => {
         dispatch(fetchProductStart());
-        const token = localStorage.getItem('token');
         const data = {
             "user_id": user_id
         }
         console.log("Params: ", data)
-        axios.post(`${api}/fetch-products`, data, {
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': `Bearer ${token}`
-            }
-        })
+        axios.post(`${api}/fetch-products`, data, configForFetch)
             .then((data) => {
                 console.log("Fetch Product Success: ", data);
                 if (data.data.status === 200) {
@@ -170,7 +163,7 @@ export function onFetchProductsForUsers() {
     return dispatch => {
         dispatch(fetchUserProductStart());
 
-        axios.post(`${api}/fetch-user-products`, null, configForFetch)
+        axios.get(`${api}/fetch-user-products`, configForFetch)
             .then((data) => {
                 // console.log("Data: ", data.data.products)
                 dispatch(fetchUserProductSuccess(data.data.products))
@@ -212,13 +205,7 @@ export function onEditproduct(params) {
 export function onDeleteproduct(params) {
     return dispatch => {
         dispatch(deleteProductStart());
-        const token = localStorage.getItem('token');
-        axios.post(`${api}/delete-product`, params, {
-            headers: {
-                'Content-Type': 'application/json',
-                'authorization': `Bearer ${token}`
-            }
-        })
+        axios.post(`${api}/delete-product`, params, configForFetch)
             .then((data) => {
                 dispatch(deleteProductSuccess(data.data.id))
             })

@@ -35,6 +35,7 @@ class OrderCart extends React.Component {
         }
     }
 
+    // called when user increase or decrease quantity
     _handleQuantityChange(e, item, quantity) {
         const currentValue = e.target.value;
         if (currentValue - quantity == 1) {
@@ -62,6 +63,7 @@ class OrderCart extends React.Component {
         }
     }
 
+    // called when user clicks on X button
     _handleRemoveItemFromCart(id) {
         const allItemsFromCart = JSON.parse(localStorage.getItem('cartItems'));
         const afterRemoveItemFromCart = allItemsFromCart.filter((product) => product.item._id !== id);
@@ -71,20 +73,25 @@ class OrderCart extends React.Component {
         })
     }
 
+    // called when user clicks on countinue shopping button
     _handleContinueShoppingCart() {
         this.props.history.push({ pathname: "/user-dashboard" })
     }
 
+    // caled when user clicks on checkout button
     _handleCheckout() {
         const params = {
             user_id: this.props._user_id
         }
+
+        // checkout api
         axios.post("http://localhost:3001/checkout", params)
             .then((data) => {
                 console.log("Data: ", data.data.status);
                 this.setState({
                     checkoutSuccessModal: true
                 })
+                localStorage.removeItem("cartItems")
             })
             .catch((error) => {
                 console.log("Error: ", error);
@@ -198,7 +205,7 @@ class OrderCart extends React.Component {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td colspan="2" style={{ textAlign: 'left' }}>
+                                <td colSpan="2" style={{ textAlign: 'left' }}>
                                     <Button color="success" onClick={this._handleCheckout}>Checkout</Button>
                                 </td>
                             </tr>

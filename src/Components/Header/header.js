@@ -8,26 +8,27 @@ import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 import './header.css';
 
 const Header = () => {
-    const [userLoggedIn, setUserLoggedIn] = useState(false);
-    const [username, setUserName] = useState("");
+    const { currentUser: { username, userLoggedIn } } = JSON.parse(localStorage.getItem("userDetails"));
+    const cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")).length : 0
+    const [_userLoggedIn, setUserLoggedIn] = useState(userLoggedIn);
+    const [_username, setUserName] = useState(username);
     const [itemCount, setItemCount] = useState(0);
     const dispatch = useDispatch();
     const history = useHistory();
 
     useEffect(() => {
-        const count = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")).length : 0;
-        setItemCount(count);
-        setUserLoggedIn(localStorage.getItem("userLoggedIn"));
-        setUserName(localStorage.getItem("userName"));
-    }, [localStorage.getItem("cartItems"),
-    localStorage.getItem("username"),
-    localStorage.getItem("userLoggedIn")])
+        setItemCount(cartItems);
+        setUserLoggedIn(userLoggedIn);
+        setUserName(username);
+    }, [cartItems, username, userLoggedIn])
 
+    // function called when user click on logout button
     const _handleLogout = () => {
         dispatch(actions.onLogout());
         history.push("/");
     }
 
+    // function called when user click on cart button
     const _handleCart = () => {
         history.push("/order-cart");
     }
@@ -36,11 +37,12 @@ const Header = () => {
         <div>
             <Navbar color="light" light>
                 <NavbarBrand href="/" className="mr-auto">Web</NavbarBrand>
+                {console.log("userLoggedIn: ", _userLoggedIn, _username)}
                 {
-                    userLoggedIn &&
+                    _userLoggedIn &&
                     <Nav navbar className="mr-4 rightMenu">
                         <NavItem className="navitem">
-                            <NavLink>{username}</NavLink>
+                            <NavLink>{_username}</NavLink>
                         </NavItem>
                         <NavItem className="navitem">
                             <NavLink onClick={_handleCart}>

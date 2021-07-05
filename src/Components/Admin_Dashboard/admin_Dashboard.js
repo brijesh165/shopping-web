@@ -55,6 +55,7 @@ class AdminDashboard extends React.Component {
         this._handleDelete = this._handleDelete.bind(this);
     }
 
+    // called to open/close model
     _handleAddModalToggle() {
         console.log("Add Modal: ", !this.state.addModal)
         this.setState({
@@ -64,6 +65,7 @@ class AdminDashboard extends React.Component {
         this._handleResetForm();
     }
 
+    // called when user enter information in product form
     _handleChange(e) {
         e.preventDefault();
         const { name, value } = e.target;
@@ -91,6 +93,8 @@ class AdminDashboard extends React.Component {
         }
     }
 
+
+    // update state when user click on edit button
     _handleEdit(item) {
         console.log("Edit Item: ", item)
         this.setState({
@@ -109,10 +113,11 @@ class AdminDashboard extends React.Component {
         })
     }
 
+    // called when user delete the product
     _handleDelete(id, imagepath) {
         const deleteParams = {
             id: id,
-            imagepath: `public/${imagepath}`
+            imagepath: `${imagepath}`
         }
         this.props.onDelete(deleteParams);
     }
@@ -131,6 +136,7 @@ class AdminDashboard extends React.Component {
         })
     }
 
+    // called when user click on cancel button
     _handleCancel() {
         this.setState({
             addModal: false,
@@ -140,6 +146,7 @@ class AdminDashboard extends React.Component {
         this._handleResetForm();
     }
 
+    // called when user submit the form for edit/create product
     _onFormSubmit() {
         if (this.state.isEdit) {
             const params = {
@@ -147,7 +154,9 @@ class AdminDashboard extends React.Component {
                 form: this.state.form,
                 user_id: this.props._user_id
             }
-            this.props.onEdit(params)
+            this.props.onEdit(params);
+            this._handleAddModalToggle();
+            this._handleResetForm();
         } else {
             const params = {
                 form: this.state.form,
@@ -155,18 +164,15 @@ class AdminDashboard extends React.Component {
             }
             console.log("Create Product Params: ", params)
             this.props.onCreate(params);
-        }
-
-        console.log("Loading: ", this.props._loading)
-        if (!this.state.loading) {
             this._handleAddModalToggle();
             this._handleResetForm();
         }
     }
 
+    // called from componentDidMount to get all the products
     getAllProducts() {
-        console.log("User Id: ", this.props._user_id)
-        this.props.onFetchProducts(localStorage.getItem("user_id"));
+        const { currentUser: { _id } } = JSON.parse(localStorage.getItem("userDetails"));
+        this.props.onFetchProducts(_id);
     }
 
     componentDidMount() {

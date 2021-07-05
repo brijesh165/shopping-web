@@ -16,21 +16,16 @@ class UserDashboard extends React.Component {
         this._handleImageClick = this._handleImageClick.bind(this);
     }
 
-    getUserProducts() {
-        console.log("Get Products")
-        if (localStorage.getItem("token")) {
-            this.props.onFetch();
-        } else {
-            this.props.history.push({
-                pathname: "/"
-            })
-        }
+    getAllProducts() {
+        this.props.onFetch()
     }
 
     componentDidMount() {
-        this.getUserProducts();
+        this.getAllProducts();
     }
 
+
+    // Call on click of an Image
     _handleImageClick(item) {
         this.props.history.push({
             pathname: "/product-details",
@@ -38,6 +33,7 @@ class UserDashboard extends React.Component {
         })
     }
 
+    // Call on clikc of add to cart button
     _handleAddCart(item) {
         if (localStorage.getItem('cartItems')) {
             const previousCartItems = JSON.parse(localStorage.getItem('cartItems'));
@@ -106,7 +102,6 @@ class UserDashboard extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    // console.log("Product List: ", state.products.userproducts)
     return {
         _username: state.users.username,
         _currency: state.users.currency,
@@ -115,10 +110,10 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
     return {
         onFetch: () => dispatch(actions.onFetchProductsForUsers())
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserDashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserDashboard));

@@ -32,13 +32,16 @@ const Login = () => {
         }
     }, [_userLoggedIn, _role, history])
 
+    // called for form reset
     const _handleFormReset = () => {
         setUsername('');
         setPassword('');
     }
 
+    // Called when user clicks on login button
     const _handleFormSubmit = (e) => {
         e.preventDefault();
+        // action dispatch with user information
         dispatch(actions.onLogin({ username: username, password: password }))
     }
 
