@@ -1,15 +1,23 @@
 import axios from 'axios';
 import FormData from 'form-data';
 import * as actionTypes from './actionTypes';
+import * as actions from './index';
 
 const api = "http://localhost:3001";
 const token = localStorage.getItem("token");
-
-const config = {
+console.log("Token: ", token);
+const configForForm = {
     headers: {
         'accept': 'application/json',
         'Accept-Language': 'en-US,en;q=0.8',
-        'Content-Type': `multipart/form-data`,
+        'Content-Type': `multipart/form-data/application/json`,
+        'authorization': `Bearer ${token}`
+    }
+}
+
+const configForFetch = {
+    headers: {
+        'Content-Type': 'application/json',
         'authorization': `Bearer ${token}`
     }
 }
@@ -118,7 +126,7 @@ export function oncreateproduct(params) {
         data.append('status', params.form.status);
         data.append('user_id', params.user_id);
 
-        axios.post(`${api}/create-product`, data, config)
+        axios.post(`${api}/create-product`, data, configForForm)
             .then((data) => {
                 dispatch(createProductSuccess(data.data.product))
             })
@@ -129,14 +137,27 @@ export function oncreateproduct(params) {
     }
 }
 
-export function onFetchProducts(params) {
+export function onFetchProducts(user_id) {
     return dispatch => {
         dispatch(fetchProductStart());
-
-        axios.post(`${api}//fetch-products`, params, config)
+        const token = localStorage.getItem('token');
+        const data = {
+            "user_id": user_id
+        }
+        console.log("Params: ", data)
+        axios.post(`${api}/fetch-products`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': `Bearer ${token}`
+            }
+        })
             .then((data) => {
-                // console.log("Fetch Product Success: ", data);
-                dispatch(fetchProductSuccess(data.data.products))
+                console.log("Fetch Product Success: ", data);
+                if (data.data.status === 200) {
+                    dispatch(fetchProductSuccess(data.data.products))
+                } else if (data.data.status === "error") {
+                    dispatch(actions.onLogout())
+                }
             })
             .catch((error) => {
                 console.log("Fetch Product Error: ", error);
@@ -149,7 +170,7 @@ export function onFetchProductsForUsers() {
     return dispatch => {
         dispatch(fetchUserProductStart());
 
-        axios.post(`${api}/fetch-user-products`, null, config)
+        axios.post(`${api}/fetch-user-products`, null, configForFetch)
             .then((data) => {
                 // console.log("Data: ", data.data.products)
                 dispatch(fetchUserProductSuccess(data.data.products))
@@ -176,7 +197,7 @@ export function onEditproduct(params) {
         data.append('image', params.form.image, params.form.image.name);
         data.append('status', params.form.status);
         data.append('user_id', params.user_id);
-        axios.post(`${api}/edit-product`, data, config)
+        axios.post(`${api}/edit-product`, data, configForForm)
             .then((data) => {
                 // console.log("Edit Data: ", data.data)
                 dispatch(editProductSuccess(data.data.product))
@@ -191,7 +212,13 @@ export function onEditproduct(params) {
 export function onDeleteproduct(params) {
     return dispatch => {
         dispatch(deleteProductStart());
-        axios.post(`${api}//delete-product`, params, config)
+        const token = localStorage.getItem('token');
+        axios.post(`${api}/delete-product`, params, {
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': `Bearer ${token}`
+            }
+        })
             .then((data) => {
                 dispatch(deleteProductSuccess(data.data.id))
             })

@@ -17,7 +17,14 @@ class UserDashboard extends React.Component {
     }
 
     getUserProducts() {
-        this.props.onFetch();
+        console.log("Get Products")
+        if (localStorage.getItem("token")) {
+            this.props.onFetch();
+        } else {
+            this.props.history.push({
+                pathname: "/"
+            })
+        }
     }
 
     componentDidMount() {

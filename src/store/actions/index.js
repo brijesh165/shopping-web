@@ -1,6 +1,7 @@
 export {
     onLogin,
-    logout
+    logout,
+    onLogout
 } from './userActions';
 
 export {

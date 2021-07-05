@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
 import * as actions from './../../store/actions/index';
@@ -7,26 +7,25 @@ import * as actions from './../../store/actions/index';
 import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 import './header.css';
 
-const mapState = ({ users }) => ({
-    userLoggedIn: users.userLoggedIn,
-    username: users.username
-})
-
 const Header = () => {
-    const { userLoggedIn, username } = useSelector(mapState);
+    const [userLoggedIn, setUserLoggedIn] = useState(false);
+    const [username, setUserName] = useState("");
+    const [itemCount, setItemCount] = useState(0);
     const dispatch = useDispatch();
     const history = useHistory();
 
     useEffect(() => {
-        if (!userLoggedIn) {
-            history.push("/")
-        }
-    }, [userLoggedIn, history])
+        const count = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")).length : 0;
+        setItemCount(count);
+        setUserLoggedIn(localStorage.getItem("userLoggedIn"));
+        setUserName(localStorage.getItem("userName"));
+    }, [localStorage.getItem("cartItems"),
+    localStorage.getItem("username"),
+    localStorage.getItem("userLoggedIn")])
 
     const _handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userLoggedIn");
-        dispatch(actions.logout());
+        dispatch(actions.onLogout());
+        history.push("/");
     }
 
     const _handleCart = () => {
@@ -44,7 +43,12 @@ const Header = () => {
                             <NavLink>{username}</NavLink>
                         </NavItem>
                         <NavItem className="navitem">
-                            <NavLink onClick={_handleCart}>Cart</NavLink>
+                            <NavLink onClick={_handleCart}>
+                                <div className="wrapper">
+                                    Cart
+                                    {itemCount > 0 && <span>{itemCount}</span>}
+                                </div>
+                            </NavLink>
                         </NavItem>
                         <NavItem className="navitem">
                             <NavLink onClick={_handleLogout}>Logout</NavLink>

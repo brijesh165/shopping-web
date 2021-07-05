@@ -42,7 +42,8 @@ class AdminDashboard extends React.Component {
                 status: false
             },
             isEdit: false,
-            editProductId: ""
+            editProductId: "",
+            loading: props._loading
         }
 
         this._handleAddModalToggle = this._handleAddModalToggle.bind(this);
@@ -111,7 +112,7 @@ class AdminDashboard extends React.Component {
     _handleDelete(id, imagepath) {
         const deleteParams = {
             id: id,
-            imagepath: imagepath
+            imagepath: `public/${imagepath}`
         }
         this.props.onDelete(deleteParams);
     }
@@ -157,14 +158,15 @@ class AdminDashboard extends React.Component {
         }
 
         console.log("Loading: ", this.props._loading)
-        if (!this.props._loading) {
+        if (!this.state.loading) {
             this._handleAddModalToggle();
             this._handleResetForm();
         }
     }
 
     getAllProducts() {
-        this.props.onFetchProducts({ user_id: this.props._user_id });
+        console.log("User Id: ", this.props._user_id)
+        this.props.onFetchProducts(localStorage.getItem("user_id"));
     }
 
     componentDidMount() {
@@ -212,10 +214,11 @@ class AdminDashboard extends React.Component {
                                                 &nbsp;
                                                 <Button color="danger" onClick={() => this._handleDelete(item._id, item.image)}>DELETE</Button>
                                             </td>
-                                        </tr>
-                                    )}
+                                        </tr >
+                                    )
+                                    }
                                 </tbody>
-                            </Table> :
+                            </Table > :
                             <div className="mt-4">
                                 <p>Please add your product</p>
                             </div>
@@ -330,8 +333,8 @@ class AdminDashboard extends React.Component {
                         </ModalBody>
                     </Modal>
 
-                </Container>
-            </React.Fragment>
+                </Container >
+            </React.Fragment >
         )
     }
 }
