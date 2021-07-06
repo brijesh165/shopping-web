@@ -53,6 +53,7 @@ class AdminDashboard extends React.Component {
         this._handleResetForm = this._handleResetForm.bind(this);
         this._handleCancel = this._handleCancel.bind(this);
         this._handleDelete = this._handleDelete.bind(this);
+        this._handleImageDelete = this._handleImageDelete.bind(this);
     }
 
     // called to open/close model
@@ -107,8 +108,18 @@ class AdminDashboard extends React.Component {
                 subcategory: item.subcategory,
                 description: item.description,
                 price: item.price,
-                image: item.image.split("-")[1],
+                image: item.image,
                 status: item.status === true ? 'on' : 'off'
+            }
+        })
+    }
+
+    // called when user clicks on delete image button
+    _handleImageDelete() {
+        this.setState({
+            form: {
+                ...this.state.form,
+                image: null
             }
         })
     }
@@ -180,6 +191,7 @@ class AdminDashboard extends React.Component {
     }
 
     render() {
+        console.log("Admin Dashboard Page")
         const { category, subcategory } = options;
         const categoryOptions = category.map(item => {
             return <option value={item.value}>{item.name}</option>
@@ -211,7 +223,9 @@ class AdminDashboard extends React.Component {
                                 <tbody>
                                     {this.props._productList.map((item, index) =>
                                         <tr key={item._id}>
-                                            <td><img alt={`productimage${index}`} src={`http://localhost:3001/${item.image}`} /></td>
+                                            <td><img
+                                                className="productImage"
+                                                alt={`productimage${index}`} src={`http://localhost:3001/${item.image}`} /></td>
                                             <td>{item.product_name}</td>
                                             <td>{item.category}</td>
                                             <td>{item.subcategory}</td>
@@ -305,18 +319,36 @@ class AdminDashboard extends React.Component {
                                     </Col>
                                 </AvGroup>
 
-                                <AvGroup row>
-                                    <Label lg={4}>Image</Label>
-                                    <Col lg={8}>
-                                        <AvField type="file"
-                                            name="image"
-                                            accept="image/png, image/jpeg"
-                                            onChange={this._handleChange}
-                                            validate={{
-                                                required: { value: true, errorMessage: "Please select image" }
-                                            }} />
-                                    </Col>
-                                </AvGroup>
+                                {console.log("Ima: ", this.state.form.image)}
+                                {this.state.isEdit && this.state.form.image ?
+                                    <AvGroup row>
+                                        <Label lg={4}>Image</Label>
+                                        <Col lg={6}>
+                                            <img
+                                                className="productImage"
+                                                src={`http://localhost:3001/${this.state.form.image}`} alt="Edit Image" />
+                                        </Col>
+                                        <Col lg={2}>
+                                            <Button color="danger"
+                                                onClick={this._handleImageDelete}
+                                            >X</Button>
+                                        </Col>
+                                    </AvGroup>
+                                    :
+                                    <AvGroup row>
+                                        <Label lg={4}>Image</Label>
+                                        <Col lg={8}>
+                                            <AvField type="file"
+                                                name="image"
+                                                accept="image/png, image/jpeg"
+                                                onChange={this._handleChange}
+                                                validate={{
+                                                    required: { value: true, errorMessage: "Please select image" }
+                                                }} />
+                                        </Col>
+                                    </AvGroup>
+                                }
+
 
                                 <AvGroup row>
                                     <Label lg={4}>Status</Label>
