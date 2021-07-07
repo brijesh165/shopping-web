@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 import { Label, Col, Button } from 'reactstrap';
 import { AvForm, AvGroup, AvField } from 'availity-reactstrap-validation';
 
@@ -17,6 +19,7 @@ const Login = () => {
     const { _userLoggedIn, _role, _loginError } = useSelector(mapState);
     const dispatch = useDispatch();
     const history = useHistory();
+    const { t, i18n } = useTranslation();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -48,7 +51,7 @@ const Login = () => {
     return (
         <div className="loginContainer">
             <div className="loginCard">
-                <h3>Login Form</h3>
+                <h3>{t('login.title')}</h3>
                 {_loginError &&
                     <div style={{ textAlign: 'center' }}>
                         <p style={{ color: 'red' }}>{_loginError}</p>
@@ -56,7 +59,7 @@ const Login = () => {
                 }
                 <AvForm className="loginForm" onValidSubmit={_handleFormSubmit}>
                     <AvGroup row>
-                        <Label lg={4}>User Name</Label>
+                        <Label lg={4}>{t('login.username')}</Label>
                         <Col lg={8}>
                             <AvField
                                 name="username"
@@ -70,7 +73,7 @@ const Login = () => {
                         </Col>
                     </AvGroup>
                     <AvGroup row>
-                        <Label lg={4}>Password</Label>
+                        <Label lg={4}>{t('login.password')}</Label>
                         <Col lg={8}>
                             <AvField
                                 name="password"
@@ -84,7 +87,7 @@ const Login = () => {
                         </Col>
                     </AvGroup>
                     <AvGroup row>
-                        <Button color="primary" style={{ margin: "0 auto" }}>Login</Button>
+                        <Button color="primary" style={{ margin: "0 auto" }}>{t('login.button')}</Button>
                     </AvGroup>
                 </AvForm>
             </div>

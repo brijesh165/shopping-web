@@ -180,7 +180,7 @@ class OrderCart extends React.Component {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>SHOPPING FEE</b></td>
+                                <td><b>SHIPPING FEE</b></td>
                                 <td>
                                     {this.props._currency === "USD" ? `$${15}` : `INR${15}`}
                                     15</td>

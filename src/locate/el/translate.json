@@ -1,0 +1,44 @@
+{
+    "translations": {
+        "welcome": "Welcome",
+        "login.title": "Formulario de inicio de sesión",
+        "admindashboard.add": "Agregar",
+        "username": "User Name",
+        "password": "Password",
+        "addToCart": "Add To Cart",
+        "addToWishlist": "Add To Wishlist",
+        "table": {
+            "thumb": "Thumb",
+            "name": "Name",
+            "category": "Category",
+            "subcategory": "Subcategory",
+            "actions": "Actions"
+        },
+        "form": {
+            "name": "Name",
+            "category": "Category",
+            "subcategory": "Subcategory",
+            "description": "Description",
+            "price": "Price",
+            "image": "Image",
+            "status": "Status",
+            "add": "Add",
+            "edit": "Edit",
+            "cancel": "Cancel"
+        },
+        "productDetails": "Product Details",
+        "ordertable": {
+            "image": "Image",
+            "description": "Description",
+            "quantity": "Quantity",
+            "unitprice": "Unit Price",
+            "totalprice": "Total Price",
+            "subtotal": "Sub Total",
+            "shippingfee": "Shipping Fee",
+            "grandtotal": "Grand Total",
+            "countinueshopping": "Countinue Shoppin",
+            "checkout": "Checkout",
+            "checkoutsuccessmessage": "Your payment done successfully. Thank you for shopping with us. Please provide your feedback and continue shoping with us."
+        }
+    }
+}

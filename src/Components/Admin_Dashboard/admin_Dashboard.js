@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 
 import Header from '../Header/header';
 import * as actions from '../../store/actions/index';
@@ -192,6 +193,7 @@ class AdminDashboard extends React.Component {
 
     render() {
         console.log("Admin Dashboard Page")
+        const { t } = this.props;
         const { category, subcategory } = options;
         const categoryOptions = category.map(item => {
             return <option value={item.value}>{item.name}</option>
@@ -205,7 +207,7 @@ class AdminDashboard extends React.Component {
                 <Header />
                 <Container className="mt-4">
                     <div className="addButton">
-                        <Button color="primary" onClick={this._handleAddModalToggle}>Add</Button>
+                        <Button color="primary" onClick={this._handleAddModalToggle}>{t('admindashboard.add')}</Button>
                     </div>
 
                     {
@@ -213,11 +215,11 @@ class AdminDashboard extends React.Component {
                             <Table className="mt-4">
                                 <thead>
                                     <tr>
-                                        <th>Thumb</th>
-                                        <th>Name</th>
-                                        <th>Category</th>
-                                        <th>Subcategory</th>
-                                        <th>Actions</th>
+                                        <th>{t('admindashboard.table.thumb')}</th>
+                                        <th>{t('admindashboard.table.name')}</th>
+                                        <th>{t('admindashboard.table.category')}</th>
+                                        <th>{t('admindashboard.table.subcategory')}</th>
+                                        <th>{t('admindashboard.table.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -230,9 +232,11 @@ class AdminDashboard extends React.Component {
                                             <td>{item.category}</td>
                                             <td>{item.subcategory}</td>
                                             <td>
-                                                <Button color="success" onClick={() => this._handleEdit(item)}>EDIT</Button>
+                                                <Button color="success" onClick={() => this._handleEdit(item)}>
+                                                    {t('admindashboard.table.edit')}</Button>
                                                 &nbsp;
-                                                <Button color="danger" onClick={() => this._handleDelete(item._id, item.image)}>DELETE</Button>
+                                                <Button color="danger" onClick={() => this._handleDelete(item._id, item.image)}>
+                                                    {t('admindashboard.table.delete')}</Button>
                                             </td>
                                         </tr >
                                     )
@@ -364,7 +368,8 @@ class AdminDashboard extends React.Component {
                                     <Col lg={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                                         <Button color="success" style={{ marginRight: '10px' }} type="submit">
                                             {this.state.isEdit ? 'Edit' : 'Add'}</Button>
-                                        <Button color="danger" onClick={this._handleCancel}>Cancel</Button>
+                                        <Button color="danger" onClick={this._handleCancel}>
+                                            {t('admindashboard.form.cancel')}</Button>
                                     </Col>
                                 </AvGroup>
                             </AvForm>
@@ -395,4 +400,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminDashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(AdminDashboard));
