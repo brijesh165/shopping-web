@@ -191,7 +191,7 @@ export function onEditproduct(params) {
         data.append('subcategory', params.form.subcategory);
         data.append('price', params.form.price);
         data.append('description', params.form.description);
-        data.append('image', params.form.image, params.form.image.name);
+        data.append('image', typeof params.form.image === 'object' ? (params.form.image, params.form.image.name) : params.form.image);
         data.append('status', params.form.status);
         data.append('user_id', params.user_id);
         axios.post(`${api}/edit-product`, data, {

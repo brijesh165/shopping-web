@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 
 import * as actions from './../../store/actions/index';
 
@@ -61,13 +62,13 @@ class UserDashboard extends React.Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <React.Fragment>
                 <Header />
-
                 <Container>
                     <Row className="mt-4">
-                        <h3>Welcome {this.props._username}</h3>
+                        <h3>{t('welcome')} {this.props._username}</h3>
                     </Row>
 
                     {this.props._productList.length > 0 &&
@@ -88,9 +89,10 @@ class UserDashboard extends React.Component {
                                                 this.props._currency === "USD" ?
                                                     `$${item.price}` : `INR${item.price}`
                                             }</h3>
-                                        <Button color="success" onClick={() => this._handleAddCart(item)}>ADD CART</Button>
+                                        <Button color="success" onClick={() => this._handleAddCart(item)}>
+                                            {t('user.addToCart')}</Button>
                                         &nbsp;
-                                        <Button>ADD WISHLIST</Button>
+                                        <Button>{t('user.addToWishlist')}</Button>
                                     </div>
                                 </Row>)
                         })
@@ -116,4 +118,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UserDashboard));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withTranslation()(UserDashboard)));

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import Header from './../Header/header';
 import { Container, Row, Col, Button } from 'reactstrap';
@@ -13,6 +14,7 @@ const mapState = ({ users }) => ({
 const ProductDetails = (props) => {
     const { _currency } = useSelector(mapState);
     const location = useLocation();
+    const { t, i18n } = useTranslation();
     const [item] = useState(location.state);
     const history = useHistory();
 
@@ -52,7 +54,7 @@ const ProductDetails = (props) => {
 
             <Container className="mt-4">
                 <Row className="mt-3">
-                    <h1>Product Details</h1>
+                    <h1>{t('productDetails')}</h1>
                 </Row>
                 <Row className="mt-3">
                     <Col lg={6}>
@@ -62,7 +64,7 @@ const ProductDetails = (props) => {
                         <h3>{item.product_name}</h3>
                         <p>{_currency === "USD" ? `$${item.price}` : `INR${item.price}`}</p>
                         <p>{item.description}</p>
-                        <Button color="success" onClick={_handleAddToCart}>ADD TO CART</Button>
+                        <Button color="success" onClick={_handleAddToCart}>{t('user.addToCart')}</Button>
                     </Col>
                 </Row>
             </Container>

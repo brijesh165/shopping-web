@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { withTranslation } from 'react-i18next';
 import axios from 'axios';
 
 import './order_Cart.css';
@@ -110,6 +111,7 @@ class OrderCart extends React.Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <React.Fragment>
                 <Header />
@@ -117,11 +119,11 @@ class OrderCart extends React.Component {
                     <Table style={{ textAlign: 'left' }}>
                         <thead>
                             <tr>
-                                <th>image</th>
-                                <th>Description</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Total Price</th>
+                                <th>{t('ordertable.image')}</th>
+                                <th>{t('ordertable.description')}</th>
+                                <th>{t('ordertable.quantity')}</th>
+                                <th>{t('ordertable.unitprice')}</th>
+                                <th>{t('ordertable.totalprice')}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -167,7 +169,7 @@ class OrderCart extends React.Component {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>SUBTOTAL</b></td>
+                                <td><b>{t('ordertable.subtotal')}</b></td>
                                 <td>{
                                     this.state.cartItems.length > 0 ?
                                         (this.props._currency === "USD" ?
@@ -180,7 +182,7 @@ class OrderCart extends React.Component {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>SHIPPING FEE</b></td>
+                                <td><b>{t('ordertable.shippingfee')}</b></td>
                                 <td>
                                     {this.props._currency === "USD" ? `$${15}` : `INR${15}`}
                                     15</td>
@@ -190,7 +192,7 @@ class OrderCart extends React.Component {
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td><b>GRANDTOTAL</b></td>
+                                <td><b>{t('ordertable.grandtotal')}</b></td>
                                 <td>{
                                     this.state.cartItems.length > 0 ?
                                         (this.props._currency === "USD" ?
@@ -200,13 +202,13 @@ class OrderCart extends React.Component {
                             </tr>
                             <tr>
                                 <td>
-                                    <Button color="danger" onClick={this._handleContinueShoppingCart}>Continue Shopping</Button>
+                                    <Button color="danger" onClick={this._handleContinueShoppingCart}>{t('ordertable.countinueshopping')}</Button>
                                 </td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td colSpan="2" style={{ textAlign: 'left' }}>
-                                    <Button color="success" onClick={this._handleCheckout}>Checkout</Button>
+                                    <Button color="success" onClick={this._handleCheckout}>{t('ordertable.checkout')}</Button>
                                 </td>
                             </tr>
                         </tbody>
@@ -216,12 +218,10 @@ class OrderCart extends React.Component {
                         isOpen={this.state.checkoutSuccessModal}
                         size="md"
                     >
-                        <ModalHeader>Checkout Success</ModalHeader>
+                        <ModalHeader>{t('ordertable.checkoutHeader')}</ModalHeader>
                         <ModalBody>
                             <Alert color="success">
-                                Your payment done successfully.
-                                Thank you for shopping with us.
-                                Please provide your feedback and continue shoping with us.
+                                {t('ordertable.checkoutsuccessmessage')}
                             </Alert>
                         </ModalBody>
                     </Modal>
@@ -238,4 +238,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default withRouter(connect(mapStateToProps)(OrderCart));
+export default withRouter(connect(mapStateToProps)(withTranslation()(OrderCart)));

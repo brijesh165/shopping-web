@@ -12,8 +12,8 @@ import {
 import './header.css';
 
 const Header = (props) => {
-    const { currentUser: { username, userLoggedIn } } = JSON.parse(localStorage.getItem("userDetails"));
-    const cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")).length : 0
+    const { currentUser: { username, userLoggedIn, language } } = JSON.parse(localStorage.getItem("userDetails"));
+    // const cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")).length : 0
     const [_userLoggedIn, setUserLoggedIn] = useState(userLoggedIn);
     const [_username, setUserName] = useState(username);
     const [itemCount, setItemCount] = useState(0);
@@ -22,10 +22,11 @@ const Header = (props) => {
     const history = useHistory();
 
     useEffect(() => {
-        setItemCount(cartItems);
+        i18n.changeLanguage(language);
+        setItemCount(localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")).length : 0);
         setUserLoggedIn(userLoggedIn);
         setUserName(username);
-    }, [cartItems, username, userLoggedIn])
+    }, [username, userLoggedIn, localStorage.getItem("cartItems")])
 
     // function called when user click on logout button
     const _handleLogout = () => {
