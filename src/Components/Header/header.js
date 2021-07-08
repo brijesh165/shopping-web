@@ -47,6 +47,10 @@ const Header = (props) => {
         i18n.changeLanguage("el");
     }
 
+    const _handleLanguageDutch = () => {
+        i18n.changeLanguage("nl");
+    }
+
     return (
         <div>
             <Navbar color="light" light>
@@ -72,6 +76,7 @@ const Header = (props) => {
                             <DropdownMenu>
                                 <DropdownItem active onClick={_handleLanguageEnglish}>English</DropdownItem>
                                 <DropdownItem onClick={_handleLanguageSpanish}>Spanish</DropdownItem>
+                                <DropdownItem onClick={_handleLanguageDutch}>Dutch</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         <NavItem className="navitem">

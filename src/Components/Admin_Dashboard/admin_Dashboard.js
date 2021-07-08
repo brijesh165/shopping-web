@@ -14,12 +14,15 @@ import {
 import { AvForm, AvGroup, AvField } from 'availity-reactstrap-validation';
 import './admin_Dashboard.css';
 
-const options = {
+const options1 = {
     "category": [
         { value: 'category1', name: 'Category 1' },
         { value: 'category2', name: 'Category 2' },
         { value: 'category3', name: 'Category 3' }
-    ],
+    ]
+};
+
+const option2 = {
     "subcategory": [
         { value: 'subcategory1', name: 'Subcategory 1' },
         { value: 'subcategory2', name: 'subcategory 2' },
@@ -35,8 +38,8 @@ class AdminDashboard extends React.Component {
             addModal: false,
             form: {
                 name: "",
-                category: options.category[0].value,
-                subcategory: options.subcategory[0].value,
+                category: options1.category[0].value,
+                subcategory: option2.subcategory[0].value,
                 description: "",
                 price: "",
                 image: null,
@@ -83,6 +86,16 @@ class AdminDashboard extends React.Component {
                 form: {
                     ...this.state.form,
                     status: !this.state.form.status
+                }
+            })
+        } else if (name === "category") {
+            const index = options1.category.findIndex(item => item.value === value);
+            console.log("Index", option2.subcategory[index])
+            this.setState({
+                form: {
+                    ...this.props.form,
+                    category: options1.category[index].value,
+                    subcategory: option2.subcategory[index].value
                 }
             })
         } else {
@@ -138,8 +151,8 @@ class AdminDashboard extends React.Component {
         this.setState({
             form: {
                 name: "",
-                category: options.category[0].value,
-                subcategory: options.subcategory[0].value,
+                category: options1.category[0].value,
+                subcategory: option2.subcategory[0].value,
                 description: "",
                 price: "",
                 image: null,
@@ -194,7 +207,8 @@ class AdminDashboard extends React.Component {
     render() {
         console.log("Admin Dashboard Page")
         const { t } = this.props;
-        const { category, subcategory } = options;
+        const { category } = options1;
+        const { subcategory } = option2;
         const categoryOptions = category.map(item => {
             return <option value={item.value}>{item.name}</option>
         });
@@ -291,6 +305,7 @@ class AdminDashboard extends React.Component {
                                         <AvField type="select"
                                             name="subcategory"
                                             value={this.state.form.subcategory}
+                                            disabled
                                             onChange={this._handleChange}>
                                             {subcategoryOptions}
                                         </AvField>

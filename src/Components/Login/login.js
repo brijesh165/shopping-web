@@ -33,7 +33,7 @@ const Login = () => {
                 _handleFormReset()
             }
         }
-    }, [_userLoggedIn, _role, history])
+    }, [_userLoggedIn, _role])
 
     // called for form reset
     const _handleFormReset = () => {

@@ -2,7 +2,7 @@ import { Switch, Route } from 'react-router-dom';
 import './App.css';
 
 //hoc
-import Authentication from './hoc/withAuth';
+import WithAuth from './hoc/withAuth';
 
 // component
 import Login from './Components/Login/login';
@@ -15,13 +15,29 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route path="/admin-dashboard" component={Authentication(AdminDashboard)} />
+        <Route path="/admin-dashboard" render={() => (
+          <WithAuth>
+            <AdminDashboard />
+          </WithAuth>
+        )} />
 
-        <Route path="/user-dashboard" component={Authentication(UserDashboard)} />
+        <Route path="/user-dashboard" render={() => (
+          <WithAuth>
+            <UserDashboard />
+          </WithAuth>
+        )} />
 
-        <Route path="/product-details" component={ProductDetails} />
+        <Route path="/product-details" render={() => (
+          <WithAuth>
+            <ProductDetails />
+          </WithAuth>
+        )} />
 
-        <Route path="/order-cart" component={OrderCart} />
+        <Route path="/order-cart" render={() => (
+          <WithAuth>
+            <OrderCart />
+          </WithAuth>
+        )} />
 
         <Route path="/" exact component={Login} />
 

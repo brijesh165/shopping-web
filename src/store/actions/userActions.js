@@ -34,7 +34,7 @@ export function onLogin(params) {
             .then((data) => {
                 console.log("Login Data: ", data.data)
                 if (data.data.status === 200) {
-                    dispatch(loginSuccess({ token: data.data.token, currentUser: data.data.user }))
+                    dispatch(loginSuccess({ token: data.data.token, isAuthenticated: true, currentUser: data.data.user }))
                 } else if (data.data.status === 401) {
                     dispatch(loginFail(data.data.error));
                 }
