@@ -85,7 +85,6 @@ const products_reducer = (state = initialState, action) => {
             const previoiusProducts = [...state.products];
             const editedProducts = previoiusProducts.filter((item) => item._id !== action.payload._id);
             const productsAfterEdit = [...editedProducts, action.payload];
-            console.log("productsAfterEdit", productsAfterEdit)
             return {
                 ...state,
                 loading: false,

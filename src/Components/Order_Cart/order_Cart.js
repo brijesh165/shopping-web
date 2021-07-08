@@ -40,7 +40,6 @@ class OrderCart extends React.Component {
     _handleQuantityChange(e, item, quantity) {
         const currentValue = e.target.value;
         if (currentValue - quantity == 1) {
-            console.log('Add: ', currentValue - quantity, item)
             const allItems = JSON.parse(localStorage.getItem('cartItems'));
             const itemExist = allItems.find((product) => product.item._id === item._id);
             if (itemExist) {
@@ -51,7 +50,6 @@ class OrderCart extends React.Component {
                 cartItems: allItems
             })
         } else if (currentValue - quantity == -1) {
-            console.log('Subtract: ', currentValue - quantity)
             const allItems = JSON.parse(localStorage.getItem('cartItems'));
             const itemExist = allItems.find((product) => product.item._id === item._id);
             if (itemExist) {
@@ -88,7 +86,6 @@ class OrderCart extends React.Component {
         // checkout api
         axios.post("http://localhost:3001/checkout", params)
             .then((data) => {
-                console.log("Data: ", data.data.status);
                 this.setState({
                     checkoutSuccessModal: true
                 })
@@ -129,7 +126,6 @@ class OrderCart extends React.Component {
                         </thead>
                         <tbody>
                             {this.state.cartItems.map((item) => {
-                                console.log("Item: ", item)
                                 return (
                                     <tr key={item._id}>
                                         <td width="30%">

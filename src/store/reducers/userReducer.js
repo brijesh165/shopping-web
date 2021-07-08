@@ -23,7 +23,6 @@ const user_reducer = (state = initialState, action) => {
 
         case actionTypes.LOGIN_SUCCESS: {
             action.payload.currentUser.userLoggedIn = true;
-            console.log("Reducer: ", action.payload.currentUser._id)
             localStorage.setItem("userDetails", JSON.stringify(action.payload))
             return {
                 ...state,

@@ -143,7 +143,6 @@ export function onFetchProducts(user_id) {
             }
         })
             .then((data) => {
-                console.log("Fetch Product Success: ", data);
                 if (data.data.status === 200) {
                     dispatch(fetchProductSuccess(data.data.products))
                 } else if (data.data.status === "error") {
@@ -169,7 +168,6 @@ export function onFetchProductsForUsers() {
             }
         })
             .then((data) => {
-                // console.log("Data: ", data.data.products)
                 dispatch(fetchUserProductSuccess(data.data.products))
             })
             .catch((error) => {
@@ -203,7 +201,6 @@ export function onEditproduct(params) {
             }
         })
             .then((data) => {
-                // console.log("Edit Data: ", data.data)
                 dispatch(editProductSuccess(data.data.product))
             })
             .catch((error) => {

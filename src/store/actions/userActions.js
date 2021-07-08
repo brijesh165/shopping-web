@@ -32,7 +32,6 @@ export function onLogin(params) {
         // login api call with user information
         axios.post("http://localhost:3001/login", params)
             .then((data) => {
-                console.log("Login Data: ", data.data)
                 if (data.data.status === 200) {
                     dispatch(loginSuccess({ token: data.data.token, isAuthenticated: true, currentUser: data.data.user }))
                 } else if (data.data.status === 401) {

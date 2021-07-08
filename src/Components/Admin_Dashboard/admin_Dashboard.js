@@ -62,7 +62,6 @@ class AdminDashboard extends React.Component {
 
     // called to open/close model
     _handleAddModalToggle() {
-        console.log("Add Modal: ", !this.state.addModal)
         this.setState({
             addModal: !this.state.addModal,
             isEdit: false
@@ -90,10 +89,9 @@ class AdminDashboard extends React.Component {
             })
         } else if (name === "category") {
             const index = options1.category.findIndex(item => item.value === value);
-            console.log("Index", option2.subcategory[index])
             this.setState({
                 form: {
-                    ...this.props.form,
+                    ...this.state.form,
                     category: options1.category[index].value,
                     subcategory: option2.subcategory[index].value
                 }
@@ -111,7 +109,6 @@ class AdminDashboard extends React.Component {
 
     // update state when user click on edit button
     _handleEdit(item) {
-        console.log("Edit Item: ", item)
         this.setState({
             addModal: true,
             isEdit: true,
@@ -123,7 +120,7 @@ class AdminDashboard extends React.Component {
                 description: item.description,
                 price: item.price,
                 image: item.image,
-                status: item.status === true ? 'on' : 'off'
+                status: item.status
             }
         })
     }
@@ -187,7 +184,6 @@ class AdminDashboard extends React.Component {
                 form: this.state.form,
                 user_id: this.props._user_id
             }
-            console.log("Create Product Params: ", params)
             this.props.onCreate(params);
             this._handleAddModalToggle();
             this._handleResetForm();
@@ -205,7 +201,6 @@ class AdminDashboard extends React.Component {
     }
 
     render() {
-        console.log("Admin Dashboard Page")
         const { t } = this.props;
         const { category } = options1;
         const { subcategory } = option2;
@@ -338,7 +333,6 @@ class AdminDashboard extends React.Component {
                                     </Col>
                                 </AvGroup>
 
-                                {console.log("Ima: ", this.state.form.image)}
                                 {this.state.isEdit && this.state.form.image ?
                                     <AvGroup row>
                                         <Label lg={4}>Image</Label>
@@ -375,6 +369,7 @@ class AdminDashboard extends React.Component {
                                         <CustomInput type="switch"
                                             id="status"
                                             name="status"
+                                            checked={this.state.form.status}
                                             onChange={this._handleChange} />
                                     </Col>
                                 </AvGroup>
@@ -398,7 +393,6 @@ class AdminDashboard extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    console.log('State: ', state.products.loading)
     return {
         _user_id: state.users.user_id,
         _loading: state.products.loading,
