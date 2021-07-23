@@ -10,9 +10,12 @@ import {
     UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle
 } from 'reactstrap';
 import './header.css';
+import { getUser, checkUserStatus } from './../../utils/common';
 
 const Header = (props) => {
-    const { currentUser: { username, userLoggedIn, language } } = JSON.parse(localStorage.getItem("userDetails"));
+    const userDetails = getUser();
+    const userLoggedIn = checkUserStatus();
+    const { username, language } = userDetails;
     // const cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")).length : 0
     const [_userLoggedIn, setUserLoggedIn] = useState(userLoggedIn);
     const [_username, setUserName] = useState(username);

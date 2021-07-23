@@ -3,6 +3,8 @@ import FormData from 'form-data';
 import * as actionTypes from './actionTypes';
 import * as actions from './index';
 
+import { getToken } from './../../utils/common';
+
 const api = "http://localhost:3001";
 
 export function createProductStart() {
@@ -100,7 +102,7 @@ export function oncreateproduct(params) {
         dispatch(createProductStart())
 
 
-        const { token } = JSON.parse(localStorage.getItem("userDetails"));
+        const token = getToken();
         let data = new FormData();
         data.append('product_name', params.form.name);
         data.append('category', params.form.category);
@@ -135,7 +137,7 @@ export function onFetchProducts(user_id) {
         const data = {
             "user_id": user_id
         }
-        const { token } = JSON.parse(localStorage.getItem("userDetails"));
+        const token = getToken();
         axios.post(`${api}/fetch-products`, data, {
             headers: {
                 'Content-Type': 'application/json',
@@ -160,7 +162,7 @@ export function onFetchProductsForUsers() {
     return dispatch => {
         dispatch(fetchUserProductStart());
 
-        const { token } = JSON.parse(localStorage.getItem("userDetails"));
+        const token = getToken();
         axios.get(`${api}/fetch-user-products`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -181,7 +183,7 @@ export function onEditproduct(params) {
     return dispatch => {
         dispatch(editProductStart());
 
-        const { token } = JSON.parse(localStorage.getItem("userDetails"));
+        const token = getToken();
         let data = new FormData();
         data.append('_id', params.id)
         data.append('product_name', params.form.name);
@@ -214,7 +216,7 @@ export function onDeleteproduct(params) {
     return dispatch => {
         dispatch(deleteProductStart());
 
-        const { token } = JSON.parse(localStorage.getItem("userDetails"));
+        const token = getToken();
         axios.post(`${api}/delete-product`, params, {
             headers: {
                 'Content-Type': 'application/json',

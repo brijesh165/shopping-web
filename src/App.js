@@ -21,11 +21,15 @@ function App() {
           </WithAuth>
         )} />
 
-        <Route path="/user-dashboard" render={() => (
+        <WithAuth path="/admin-dashboard" component={AdminDashboard} />
+
+        <WithAuth path="/user-dashboard" component={UserDashboard} />
+
+        {/* <Route path="/user-dashboard" render={() => (
           <WithAuth>
             <UserDashboard />
           </WithAuth>
-        )} />
+        )} /> */}
 
         <Route path="/product-details" render={() => (
           <WithAuth>

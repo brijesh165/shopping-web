@@ -1,6 +1,8 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
+import { setUserSession, setUserLanguage, removeUserSession } from './../../utils/common';
+
 export function loginStart() {
     return {
         type: actionTypes.LOGIN_START
@@ -33,6 +35,8 @@ export function onLogin(params) {
         axios.post("http://localhost:3001/login", params)
             .then((data) => {
                 if (data.data.status === 200) {
+                    setUserSession(data.data.token, true, data.data.user);
+                    setUserLanguage(data.data.user.language);
                     dispatch(loginSuccess({ token: data.data.token, isAuthenticated: true, currentUser: data.data.user }))
                 } else if (data.data.status === 401) {
                     dispatch(loginFail(data.data.error));
@@ -47,7 +51,7 @@ export function onLogin(params) {
 
 export function onLogout() {
     return dispatch => {
-        localStorage.removeItem("userDetails");
+        removeUserSession();
         dispatch(logout())
     }
 }

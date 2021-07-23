@@ -1,6 +1,21 @@
+import React from 'react';
+import { Redirect, Route } from 'react-router-dom';
 
-import useAuth from '../customeHooks/useAuth';
+import { getToken } from './../utils/common';
 
-const WithAuth = props => useAuth(props) && props.children;
+const token = getToken();
+const WithAuth = ({ component: Component, ...rest }) => (
+    <Route
+        {...rest}
+        render={(props) =>
+            token ? (
+                <Component {...props} />
+            ) : (
+                <Redirect to={{ pathname: "/login" }} />
+            )
+        }
+    />
+)
+
 
 export default WithAuth;

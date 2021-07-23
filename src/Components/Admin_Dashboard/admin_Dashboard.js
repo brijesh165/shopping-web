@@ -192,7 +192,7 @@ class AdminDashboard extends React.Component {
 
     // called from componentDidMount to get all the products
     getAllProducts() {
-        const { currentUser: { _id } } = JSON.parse(localStorage.getItem("userDetails"));
+        const { _id } = JSON.parse(sessionStorage.getItem("user"));
         this.props.onFetchProducts(_id);
     }
 
@@ -252,7 +252,7 @@ class AdminDashboard extends React.Component {
                                     }
                                 </tbody>
                             </Table > :
-                            <div className="mt-4">
+                            <div className="mt-4" key="1">
                                 <p>Please add your product</p>
                             </div>
                     }
